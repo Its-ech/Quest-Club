@@ -1,5 +1,5 @@
 const express = require('express');
-const healthV1Routes = require('./routes/v1/health.routes');
+const healthV1Routes = require('./routes/v1');
 const { notFound, errorHandler } = require('./middlewares/errorHandlers');
 
 
