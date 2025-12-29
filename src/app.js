@@ -1,10 +1,12 @@
 const express = require('express');
 const V1Routes = require('./routes/v1');
 const { notFound, errorHandler } = require('./middlewares/errorHandlers');
+const path = require('path');
 
 
 const app = express();
 
+app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(express.json());
 app.use('/api/v1', V1Routes);
 
