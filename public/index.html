@@ -1,16 +1,220 @@
 <!doctype html>
-<html lang="fa">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quest Club</title>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
+
 <body>
-  <h1>Quest Club</h1>
+  <div class="bg">
+    <div class="bg__glow bg__glow--1"></div>
+    <div class="bg__glow bg__glow--2"></div>
+    <div class="bg__noise"></div>
+  </div>
 
-  <button id="btnLoad">Load Today Quest</button>
-  <pre id="output">...</pre>
+  <aside class="streak" aria-label="Streak widget">
+    <div class="streak__title">Streak</div>
+    <div class="streak__value" id="streakValue">0 days</div>
 
-  <script src="/app.js"></script>
+    <div class="streak__bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+      <div class="streak__barFill" id="streakFill" style="width: 0%"></div>
+    </div>
+
+    <div class="streak__hint">Next reward at <b id="streakNext">10</b></div>
+  </aside>
+
+  <div class="container">
+    <header class="nav">
+      <a class="brand" href="#">
+        <span class="brand__mark">QC</span>
+        <span class="brand__name">Quest Club</span>
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#quests">Quests</a>
+        <a href="#subscription">Subscription</a>
+        <a href="#rewards">Rewards</a>
+        <a href="#community">Community</a>
+      </nav>
+
+      <div class="nav__actions">
+        <a class="btn btn--ghost" href="#login">Login</a>
+        <a class="btn btn--primary" href="#start">Start Free Trial</a>
+      </div>
+
+      <button class="nav__burger" type="button" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" id="start">
+        <div class="hero__left">
+          <p class="pill">Daily challenges • Streaks • Rewards</p>
+
+          <h1 class="hero__title">A new quest every day.</h1>
+          <p class="hero__subtitle">
+            Join the club. Keep your streak. Earn rewards.
+          </p>
+
+          <div class="hero__cta">
+            <a class="btn btn--primary btn--lg" href="#subscription">Start Free Trial</a>
+            <a class="btn btn--ghost btn--lg" href="#todays-quest">View Today’s Quest</a>
+          </div>
+
+          <p class="hero__note" id="apiStatus">API: checking...</p>
+        </div>
+
+        <div class="hero__right" id="todays-quest">
+          <article class="glassCard">
+            <header class="glassCard__head">
+              <h2 class="glassCard__title">Today’s Quest</h2>
+              <span class="badge badge--medium" id="questDifficulty">Medium</span>
+            </header>
+
+            <div class="glassCard__meta">
+              <div class="metaItem">
+                <span class="metaItem__icon" aria-hidden="true">📅</span>
+                <div>
+                  <div class="metaItem__label">Date</div>
+                  <div class="metaItem__value" id="questDate">—</div>
+                </div>
+              </div>
+
+              <div class="metaItem">
+                <span class="metaItem__icon" aria-hidden="true">⭐️</span>
+                <div>
+                  <div class="metaItem__label">XP</div>
+                  <div class="metaItem__value" id="questXp">—</div>
+                </div>
+              </div>
+
+              <div class="metaItem">
+                <span class="metaItem__icon" aria-hidden="true">🧩</span>
+                <div>
+                  <div class="metaItem__label">Status</div>
+                  <div class="metaItem__value" id="questStatus">—</div>
+                </div>
+              </div>
+            </div>
+
+            <p class="glassCard__desc" id="questDesc">
+              Loading...
+            </p>
+
+            <p class="hero__note" id="msg"></p>
+
+            <div class="glassCard__actions">
+              <button class="btn btn--primary btn--block" id="btnAccept" type="button">Accept quest</button>
+              <button class="btn btn--ghost btn--block" id="btnRefresh" type="button">Refresh</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="Social proof">
+        <div class="statCard">
+          <div class="statCard__value">12k</div>
+          <div class="statCard__label">Members</div>
+        </div>
+        <div class="statCard">
+          <div class="statCard__value">1.4M</div>
+          <div class="statCard__label">Quests completed</div>
+        </div>
+        <div class="statCard">
+          <div class="statCard__value">6.8</div>
+          <div class="statCard__label">Avg streak (days)</div>
+        </div>
+      </section>
+
+      <section class="section" id="quests">
+        <div class="section__head">
+          <h2 class="section__title">How it works</h2>
+          <p class="section__subtitle">Simple loop. Strong momentum.</p>
+        </div>
+
+        <div class="grid3">
+          <article class="card">
+            <div class="card__icon">🧭</div>
+            <h3 class="card__title">Join</h3>
+            <p class="card__text">Pick your vibe and your pace.</p>
+          </article>
+
+          <article class="card">
+            <div class="card__icon">📜</div>
+            <h3 class="card__title">Get daily quest</h3>
+            <p class="card__text">One clear challenge, every day.</p>
+          </article>
+
+          <article class="card">
+            <div class="card__icon">🏆</div>
+            <h3 class="card__title">Earn rewards</h3>
+            <p class="card__text">Keep streaks, unlock perks.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="subscription">
+        <div class="section__head">
+          <h2 class="section__title">Pricing</h2>
+          <p class="section__subtitle">Start small. Level up anytime.</p>
+        </div>
+
+        <div class="pricing">
+          <article class="priceCard">
+            <h3 class="priceCard__name">Starter</h3>
+            <p class="priceCard__price">$0</p>
+            <ul class="list">
+              <li>1 quest/day</li>
+              <li>Basic streak tracking</li>
+              <li>Community access</li>
+            </ul>
+            <a class="btn btn--ghost btn--block" href="#start">Try Starter</a>
+          </article>
+
+          <article class="priceCard priceCard--featured">
+            <div class="ribbon">Most popular</div>
+            <h3 class="priceCard__name">Plus</h3>
+            <p class="priceCard__price">$7<span>/mo</span></p>
+            <ul class="list">
+              <li>Custom difficulty</li>
+              <li>Rewards shop</li>
+              <li>Weekly recap</li>
+            </ul>
+            <a class="btn btn--primary btn--block" href="#start">Start Plus</a>
+          </article>
+
+          <article class="priceCard">
+            <h3 class="priceCard__name">Guild</h3>
+            <p class="priceCard__price">$19<span>/mo</span></p>
+            <ul class="list">
+              <li>Team challenges</li>
+              <li>Leaderboards</li>
+              <li>Priority quests</li>
+            </ul>
+            <a class="btn btn--ghost btn--block" href="#start">Start Guild</a>
+          </article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer__left">
+          <div class="footer__brand">Quest Club</div>
+          <p class="footer__text">Daily quests for consistent progress.</p>
+        </div>
+
+        <div class="footer__right">
+          <a href="#community">Community</a>
+          <a href="#rewards">Rewards</a>
+          <a href="#subscription">Subscription</a>
+          <a href="#login">Login</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
 </body>
 </html>
