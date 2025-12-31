@@ -29,7 +29,6 @@ router.post('/quests/today/accept', (req, res) => {
 
   state.accepted = true;
 
-  // Start timer on accept
   state.acceptedAt = new Date().toISOString();
   state.endsAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
 
@@ -43,6 +42,10 @@ router.post('/quests/today/accept', (req, res) => {
 router.post('/quests/today/complete', (req, res) => {
   if (!state.accepted) {
     return res.status(409).json({ error: 'Quest must be accepted first' });
+  }
+
+  if (state.endsAt && Date.now() > Date.parse(state.endsAt)) {
+    return res.status(409).json({ error: 'Quest expired' });
   }
 
   if (state.completed) {

@@ -1,13 +1,11 @@
-require('dotenv').config;
+require('dotenv').config();
 
-const ex = require('express');
-
-const app = ex();
+const app = require('./app');
 
 const PORT = process.env.PORT || 3000;
 
-app.get('/api/v1/health',(req , res)=> {
-    return res.status(200).json({status:'ok'});
+app.get('/api/v1/health', (req, res) => {
+  return res.status(200).json({ status: 'ok' });
 });
 
 app.listen(PORT, () => {

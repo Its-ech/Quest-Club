@@ -4,6 +4,14 @@ const bcrypt = require('bcryptjs');
 
 const users = require('../../store/usersStore');
 
+function issueToken(user) {
+  return jwt.sign(
+    { sub: user.id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+  );
+}
+
 router.post('/auth/register', async (req, res) => {
   const { email, password } = req.body || {};
 
@@ -46,13 +54,28 @@ router.post('/auth/login', async (req, res) => {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
 
-  const token = jwt.sign(
-    { sub: user.id, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: '7d' }
-  );
+  const token = issueToken(user);
 
-  return res.status(200).json({ token });
+  res.cookie('qc_token', token, {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+
+  return res.status(200).json({ ok: true });
+});
+
+router.post('/auth/logout', (req, res) => {
+  res.clearCookie('qc_token', {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/'
+  });
+
+  return res.status(200).json({ ok: true });
 });
 
 module.exports = router;

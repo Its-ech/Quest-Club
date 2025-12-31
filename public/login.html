@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quest Club — Login</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <div class="bg">
+    <div class="bg__glow bg__glow--1"></div>
+    <div class="bg__glow bg__glow--2"></div>
+    <div class="bg__noise"></div>
+  </div>
+
+  <div class="container">
+    <header class="nav">
+      <a class="brand" href="/">
+        <span class="brand__mark">QC</span>
+        <span class="brand__name">Quest Club</span>
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="/#quests">Quests</a>
+        <a href="/#subscription">Subscription</a>
+        <a href="/#rewards">Rewards</a>
+        <a href="/#community">Community</a>
+      </nav>
+
+      <div class="nav__actions">
+        <a class="btn btn--ghost" href="/register.html">Register</a>
+        <a class="btn btn--primary" href="/">Home</a>
+      </div>
+
+      <button class="nav__burger" type="button" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" id="start">
+        <div class="hero__left">
+          <p class="pill">Welcome back</p>
+          <h1 class="hero__title">Login</h1>
+          <p class="hero__subtitle">Sign in to access your panel.</p>
+          <p class="hero__note" id="apiStatus">API: checking...</p>
+        </div>
+
+        <div class="hero__right">
+          <article class="glassCard">
+            <header class="glassCard__head">
+              <h2 class="glassCard__title">Account</h2>
+              <span class="badge badge--medium">Secure</span>
+            </header>
+
+            <p class="glassCard__desc">Use your email and password.</p>
+
+            <p class="hero__note" id="msg"></p>
+
+            <div class="glassCard__meta">
+              <div class="metaItem">
+                <span class="metaItem__icon" aria-hidden="true">📧</span>
+                <div>
+                  <div class="metaItem__label">Email</div>
+                  <div class="metaItem__value">
+                    <input id="email" type="email" autocomplete="email" placeholder="you@example.com"
+                      style="width:100%; background:transparent; border:0; outline:0; color:inherit; font:inherit;" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="metaItem">
+                <span class="metaItem__icon" aria-hidden="true">🔒</span>
+                <div>
+                  <div class="metaItem__label">Password</div>
+                  <div class="metaItem__value">
+                    <input id="password" type="password" autocomplete="current-password" placeholder="••••••••"
+                      style="width:100%; background:transparent; border:0; outline:0; color:inherit; font:inherit;" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glassCard__actions">
+              <button class="btn btn--primary btn--block" id="btnLogin" type="button">Login</button>
+              <a class="btn btn--ghost btn--block" href="/register.html">Create account</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer__left">
+          <div class="footer__brand">Quest Club</div>
+          <p class="footer__text">Daily quests for consistent progress.</p>
+        </div>
+
+        <div class="footer__right">
+          <a href="/">Home</a>
+          <a href="/register.html">Register</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="./login.js"></script>
+</body>
+</html>

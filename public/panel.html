@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quest Club — Panel</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <div class="bg">
+    <div class="bg__glow bg__glow--1"></div>
+    <div class="bg__glow bg__glow--2"></div>
+    <div class="bg__noise"></div>
+  </div>
+
+  <div class="container">
+    <header class="nav">
+      <a class="brand" href="/">
+        <span class="brand__mark">QC</span>
+        <span class="brand__name">Quest Club</span>
+      </a>
+
+      <nav class="nav__links" aria-label="Primary">
+        <a href="/#quests">Quests</a>
+        <a href="/#subscription">Subscription</a>
+        <a href="/#rewards">Rewards</a>
+        <a href="/#community">Community</a>
+      </nav>
+
+      <div class="nav__actions">
+        <a class="btn btn--ghost" href="/">Home</a>
+        <button class="btn btn--primary" id="btnLogout" type="button">Logout</button>
+      </div>
+
+      <button class="nav__burger" type="button" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" id="start">
+        <div class="hero__left">
+          <p class="pill">Your space</p>
+          <h1 class="hero__title">Panel</h1>
+          <p class="hero__subtitle">Manage your quests and streak.</p>
+          <p class="hero__note" id="apiStatus">API: checking...</p>
+          <p class="hero__note" id="msg"></p>
+
+          <div class="hero__cta">
+            <a class="btn btn--ghost btn--lg" href="/">Back to home</a>
+            <a class="btn btn--primary btn--lg" href="/#start">Today’s quest</a>
+          </div>
+        </div>
+
+        <div class="hero__right">
+          <article class="glassCard">
+            <header class="glassCard__head">
+              <h2 class="glassCard__title">Quick actions</h2>
+              <span class="badge badge--medium">Beta</span>
+            </header>
+
+            <p class="glassCard__desc">
+              Next step: protect quest endpoints, then show user-specific data here.
+            </p>
+
+            <div class="glassCard__actions">
+              <a class="btn btn--ghost btn--block" href="/#start">Open Today’s Quest</a>
+              <button class="btn btn--primary btn--block" id="btnLogout2" type="button">Logout</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__left">
+        <div class="footer__brand">Quest Club</div>
+        <p class="footer__text">Daily quests for consistent progress.</p>
+      </div>
+
+      <div class="footer__right">
+        <a href="/">Home</a>
+        <a href="/login.html">Login</a>
+        <a href="/register.html">Register</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="./panel.js"></script>
+</body>
+</html>
