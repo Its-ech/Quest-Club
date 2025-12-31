@@ -1,5 +1,8 @@
 const state = {
   accepted: false,
+  acceptedAt: null,
+  endsAt: null,
+
   completed: false,
   completedAt: null,
 

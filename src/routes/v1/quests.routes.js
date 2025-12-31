@@ -5,9 +5,14 @@ const state = require('../../store/memoryStore');
 router.get('/quests/today', (req, res) => {
   return res.status(200).json({
     ok: true,
+
     accepted: state.accepted,
+    acceptedAt: state.acceptedAt,
+    endsAt: state.endsAt,
+
     completed: state.completed,
     completedAt: state.completedAt,
+
     date: new Date().toISOString().slice(0, 10),
     quest: {
       id: 'q_daily_001',
@@ -24,7 +29,15 @@ router.post('/quests/today/accept', (req, res) => {
 
   state.accepted = true;
 
-  return res.status(200).json({ accepted: true });
+  // Start timer on accept
+  state.acceptedAt = new Date().toISOString();
+  state.endsAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+
+  return res.status(200).json({
+    accepted: true,
+    acceptedAt: state.acceptedAt,
+    endsAt: state.endsAt
+  });
 });
 
 router.post('/quests/today/complete', (req, res) => {
@@ -39,7 +52,6 @@ router.post('/quests/today/complete', (req, res) => {
   state.completed = true;
   state.completedAt = new Date().toISOString();
 
-  // Streak increases only when quest is completed (your rule).
   state.streakDays += 1;
 
   return res.status(200).json({
