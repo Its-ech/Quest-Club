@@ -43,30 +43,237 @@
         <div class="hero__left">
           <p class="pill">Your space</p>
           <h1 class="hero__title">Panel</h1>
-          <p class="hero__subtitle">Manage your quests and streak.</p>
+          <p class="hero__subtitle">Create goals, track progress, and join challenges.</p>
           <p class="hero__note" id="apiStatus">API: checking...</p>
           <p class="hero__note" id="msg"></p>
 
           <div class="hero__cta">
             <a class="btn btn--ghost btn--lg" href="/">Back to home</a>
-            <a class="btn btn--primary btn--lg" href="/#start">Today’s quest</a>
+            <button class="btn btn--primary btn--lg" id="btnLogout2" type="button">Logout</button>
           </div>
         </div>
 
         <div class="hero__right">
+          <!-- Actions / Add & Join -->
           <article class="glassCard">
             <header class="glassCard__head">
-              <h2 class="glassCard__title">Quick actions</h2>
+              <h2 class="glassCard__title">Actions</h2>
               <span class="badge badge--medium">Beta</span>
             </header>
 
+            <p class="glassCard__desc">Add a new goal or join community challenges.</p>
+
+            <div class="glassCard__actions">
+              <button class="btn btn--primary btn--block" id="btnToggleGoalForm" type="button">Add Goal</button>
+              <button class="btn btn--ghost btn--block" id="btnJoinChallenge" type="button" disabled style="opacity:.6; cursor:not-allowed;">
+                Join Challenge (soon)
+              </button>
+            </div>
+          </article>
+
+          <!-- My Goals list -->
+          <article class="glassCard" style="margin-top: 14px;">
+            <header class="glassCard__head">
+              <h2 class="glassCard__title">My Goals</h2>
+              <span class="badge badge--medium" id="goalsCount">0</span>
+            </header>
+
+            <p class="glassCard__desc">Saved goals will appear here.</p>
+
+            <div id="rememberNote" class="metaItem" style="margin-top: 10px;">
+              <span class="metaItem__icon" aria-hidden="true">💾</span>
+              <div>
+                <div class="metaItem__label">Storage</div>
+                <div class="metaItem__value">LocalStorage (temporary until backend)</div>
+              </div>
+            </div>
+
+            <div id="goalsList" style="margin-top: 10px;"></div>
+          </article>
+
+          <!-- Collapsible Goal Form -->
+          <article class="glassCard qcCollapse" id="goalFormCard" style="margin-top: 14px;">
+            <header class="glassCard__head">
+              <h2 class="glassCard__title">Create Goal</h2>
+              <span class="badge badge--medium">New</span>
+            </header>
+
+            <div class="qcCollapse__content" id="goalFormContent">
+              <p class="glassCard__desc">
+                Create a single task or a group of tasks. Add reminders and track progress.
+              </p>
+
+              <!-- Goal type -->
+              <div class="glassCard__meta">
+                <div class="metaItem">
+                  <span class="metaItem__icon" aria-hidden="true">🧩</span>
+                  <div>
+                    <div class="metaItem__label">Type</div>
+                    <div class="metaItem__value">
+                      <select id="goalType"
+                        style="width:100%; background:transparent; border:0; outline:0; color:inherit; font:inherit;">
+                        <option value="single">Single task</option>
+                        <option value="group">Task group</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="metaItem">
+                  <span class="metaItem__icon" aria-hidden="true">🏷️</span>
+                  <div>
+                    <div class="metaItem__label">Category</div>
+                    <div class="metaItem__value">
+                      <input id="goalCategory" type="text" placeholder="e.g. Fitness, Study, Work"
+                        style="width:100%; background:transparent; border:0; outline:0; color:inherit; font:inherit;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="metaItem">
+                  <span class="metaItem__icon" aria-hidden="true">⏱️</span>
+                  <div>
+                    <div class="metaItem__label">Due time</div>
+                    <div class="metaItem__value">
+                      <input id="goalTime" type="datetime-local"
+                        style="width:100%; background:transparent; border:0; outline:0; color:inherit; font:inherit;" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Title/Description -->
+              <div class="glassCard__meta" style="grid-template-columns: 1fr; margin-top: 10px;">
+                <div class="metaItem">
+                  <span class="metaItem__icon" aria-hidden="true">✍️</span>
+                  <div style="width:100%;">
+                    <div class="metaItem__label">Title</div>
+                    <div class="metaItem__value">
+                      <input id="goalTitle" type="text" placeholder="Goal title"
+                        style="width:100%; background:transparent; border:0; outline:0; color:inherit; font:inherit;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="metaItem">
+                  <span class="metaItem__icon" aria-hidden="true">📝</span>
+                  <div style="width:100%;">
+                    <div class="metaItem__label">Description</div>
+                    <div class="metaItem__value">
+                      <textarea id="goalDesc" rows="3" placeholder="Describe your goal..."
+                        style="width:100%; resize:vertical; background:transparent; border:0; outline:0; color:inherit; font:inherit;"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Image upload -->
+              <div class="glassCard__meta" style="grid-template-columns: 1fr; margin-top: 10px;">
+                <div class="metaItem">
+                  <span class="metaItem__icon" aria-hidden="true">🖼️</span>
+                  <div style="width:100%;">
+                    <div class="metaItem__label">Image</div>
+                    <div class="metaItem__value">
+                      <input id="goalImage" type="file" accept="image/*"
+                        style="width:100%; background:transparent; border:0; outline:0; color:inherit; font:inherit;" />
+                      <div id="imagePreviewWrap" style="margin-top:10px; display:none;">
+                        <img id="imagePreview" alt="Preview"
+                          style="width:100%; border-radius: 14px; border: 1px solid rgba(255,255,255,.12);" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reminders -->
+              <div class="glassCard__meta" style="grid-template-columns: 1fr; margin-top: 10px;">
+                <div class="metaItem">
+                  <span class="metaItem__icon" aria-hidden="true">🔔</span>
+                  <div style="width:100%;">
+                    <div class="metaItem__label">Reminders</div>
+                    <div class="metaItem__value" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                      <label style="display:flex; gap:8px; align-items:center;">
+                        <input id="enableReminders" type="checkbox" />
+                        <span style="font-weight:700;">Receive messages</span>
+                      </label>
+
+                      <select id="reminderMode"
+                        style="background:transparent; border:0; outline:0; color:inherit; font:inherit;">
+                        <option value="fixed">Fixed times</option>
+                        <option value="interval">Every X minutes</option>
+                      </select>
+
+                      <input id="reminderFixed" type="text" placeholder="09:00, 14:00, 20:00"
+                        style="flex:1; min-width: 180px; background:transparent; border:0; outline:0; color:inherit; font:inherit;" />
+
+                      <input id="reminderInterval" type="number" min="1" max="1440" placeholder="60"
+                        style="width:90px; background:transparent; border:0; outline:0; color:inherit; font:inherit; display:none;" />
+
+                      <span id="reminderIntervalLabel" style="display:none; font-size:12px; color: rgba(255,255,255,.65);">minutes</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Progress (preview) -->
+              <div class="glassCard__meta" style="grid-template-columns: 1fr; margin-top: 10px;">
+                <div class="metaItem">
+                  <span class="metaItem__icon" aria-hidden="true">📈</span>
+                  <div style="width:100%;">
+                    <div class="metaItem__label">Progress</div>
+                    <div class="metaItem__value" style="display:flex; gap:10px; align-items:center;">
+                      <progress id="goalProgress" value="0" max="100" style="width:100%;">0%</progress>
+                      <span id="goalProgressText" style="font-weight:800;">0%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Group tasks -->
+              <div id="groupTasksWrap" style="margin-top: 10px; display:none;">
+                <div class="glassCard__meta" style="grid-template-columns: 1fr; margin-top: 10px;">
+                  <div class="metaItem">
+                    <span class="metaItem__icon" aria-hidden="true">📌</span>
+                    <div style="width:100%;">
+                      <div class="metaItem__label">Group tasks</div>
+                      <div class="metaItem__value" style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <input id="taskTitle" type="text" placeholder="Task title"
+                          style="flex:1; min-width: 180px; background:transparent; border:0; outline:0; color:inherit; font:inherit;" />
+                        <input id="taskTime" type="datetime-local"
+                          style="min-width: 220px; background:transparent; border:0; outline:0; color:inherit; font:inherit;" />
+                        <button class="btn btn--ghost" id="btnAddTask" type="button">Add task</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="tasksList" style="margin-top: 10px;"></div>
+              </div>
+
+              <!-- Actions -->
+              <div class="glassCard__actions" style="margin-top: 12px;">
+                <button class="btn btn--primary btn--block" id="btnSaveGoal" type="button">Save goal</button>
+                <button class="btn btn--ghost btn--block" id="btnShareGoal" type="button">Share</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Joined Challenges (future) -->
+          <article class="glassCard" style="margin-top: 14px;">
+            <header class="glassCard__head">
+              <h2 class="glassCard__title">Joined Challenges</h2>
+              <span class="badge badge--medium">Soon</span>
+            </header>
+
             <p class="glassCard__desc">
-              Next step: protect quest endpoints, then show user-specific data here.
+              Challenges will be available soon. This section will connect to quests later.
             </p>
 
             <div class="glassCard__actions">
-              <a class="btn btn--ghost btn--block" href="/#start">Open Today’s Quest</a>
-              <button class="btn btn--primary btn--block" id="btnLogout2" type="button">Logout</button>
+              <button class="btn btn--ghost btn--block" type="button" disabled style="opacity:.6; cursor:not-allowed;">
+                Coming soon
+              </button>
+              <a class="btn btn--primary btn--block" href="/#start">Back to Today’s Quest</a>
             </div>
           </article>
         </div>

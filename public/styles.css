@@ -486,3 +486,60 @@ body {
 #questStatus{
   font-weight: 800;
 }
+/* =========================
+   Panel helpers
+   ========================= */
+.qcCollapse .qcCollapse__content{
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-height .35s ease, opacity .25s ease, transform .25s ease;
+}
+
+.qcCollapse.is-open .qcCollapse__content{
+  max-height: 1600px; /* big enough for the form */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Goals list cards */
+.qcGoalCard{
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  border-radius: 18px;
+  padding: 14px;
+  margin-top: 10px;
+}
+
+.qcGoalCard__top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+
+.qcGoalCard__title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.qcGoalCard__meta{
+  margin-top: 6px;
+  color: rgba(255,255,255,.70);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.qcGoalCard__actions{
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.qcMini{
+  font-size: 12px;
+  color: rgba(255,255,255,.65);
+}
