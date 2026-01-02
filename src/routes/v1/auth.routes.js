@@ -12,6 +12,22 @@ function issueToken(user) {
   );
 }
 
+// ✅ NEW: auth check endpoint (must be top-level, not inside login)
+router.get('/auth/me', (req, res) => {
+  try {
+    const token = req.cookies?.qc_token;
+    if (!token) return res.status(401).json({ ok: false });
+
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    return res.status(200).json({
+      ok: true,
+      user: { id: payload.sub, email: payload.email }
+    });
+  } catch {
+    return res.status(401).json({ ok: false });
+  }
+});
+
 router.post('/auth/register', async (req, res) => {
   const { email, password } = req.body || {};
 
