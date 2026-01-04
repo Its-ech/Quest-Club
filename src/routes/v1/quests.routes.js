@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { getUserState } = require('../../store/memoryStore'); // استیت per-user
+const { getUserState, resetUserState } = require('../../store/memoryStore'); // استیت per-user + ریست
 const requireAuth = require('../../middlewares/requireAuth'); // میدلوری چک لاگین
 
 // تمام روت‌های این فایل فقط برای کاربر لاگین‌شده
@@ -88,6 +88,25 @@ router.post('/quests/today/complete', (req, res) => {
   return res.status(200).json({
     completed: true,
     completedAt: state.completedAt
+  });
+});
+
+// ریست کردن وضعیت کوئست/استریک برای همین کاربر (فقط برای توسعه)
+router.post('/quests/today/reset', (req, res) => {
+  // در production این endpoint نباید فعال باشد
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ error: 'Not Found' });
+  }
+
+  // ریست استیت مخصوص همین کاربر
+  const state = resetUserState(req.user.id);
+
+  return res.status(200).json({
+    ok: true,
+    // یک خلاصه کوچک برمی‌گردانیم تا تست راحت باشد
+    accepted: state.accepted,
+    completed: state.completed,
+    streakDays: state.streakDays
   });
 });
 
