@@ -3,29 +3,48 @@
    HTML/CSS template
    ========================= */
 
-/* ---- CSS Reset-ish ---- */
+/* نکته: برای خوانایی بهتر، CSS به چند بخش منطقی تقسیم شده و با کامنت جدا شده است. [web:145] */
+
+
+/* =========================
+   Reset / پایه
+   ========================= */
+
+/* Reset-ish: جلوگیری از بهم‌ریختگی اندازه‌ها و محاسبه راحت‌تر عرض/ارتفاع */
 * { box-sizing: border-box; }
+
+/* ارتفاع کامل صفحه برای layoutهای تمام‌قد */
 html, body { height: 100%; }
+
+/* استایل پایه‌ی صفحه */
 body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
   color: rgba(255,255,255,.92);
-  background: #070712; /* fallback */
-  overflow-x: hidden;
+  background: #070712; /* رنگ پس‌زمینه fallback */
+  overflow-x: hidden; /* جلوگیری از اسکرول افقی ناخواسته */
 }
 
-/* ---- Layout container ---- */
+
+/* =========================
+   Container / Layout
+   ========================= */
+
+/* کانتینر اصلی محتوا: محدودیت عرض و وسط‌چین */
 .container{
   width: min(1100px, calc(100% - 40px));
   margin: 0 auto;
   position: relative;
-  z-index: 2; /* above background */
+  z-index: 2; /* محتوای اصلی روی بک‌گراند */
   padding-bottom: 64px;
 }
 
+
 /* =========================
-   Background (gradient + glow)
+   Background (Glow + Noise)
    ========================= */
+
+/* بک‌گراند ثابت با گرادیانت و نورهای محو */
 .bg{
   position: fixed;
   inset: 0;
@@ -34,21 +53,29 @@ body {
               radial-gradient(1000px 650px at 80% 20%, rgba(90, 190, 255, .18), transparent 55%),
               linear-gradient(135deg, #070712, #070a16 35%, #070712);
 }
+
+/* پایه‌ی “Glow” ها */
 .bg__glow{
   position: absolute;
   filter: blur(40px);
   opacity: .8;
 }
+
+/* glow سمت چپ */
 .bg__glow--1{
   width: 420px; height: 420px;
   left: -80px; top: 120px;
   background: radial-gradient(circle, rgba(167, 92, 255, .55), transparent 65%);
 }
+
+/* glow سمت راست */
 .bg__glow--2{
   width: 520px; height: 520px;
   right: -140px; top: 40px;
   background: radial-gradient(circle, rgba(90, 190, 255, .45), transparent 65%);
 }
+
+/* نویز سبک برای حس “glass / cinematic” */
 .bg__noise{
   position: absolute;
   inset: 0;
@@ -57,9 +84,12 @@ body {
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
 }
 
+
 /* =========================
    Navigation
    ========================= */
+
+/* نوار ناوبری بالا */
 .nav{
   display: flex;
   align-items: center;
@@ -67,6 +97,8 @@ body {
   gap: 16px;
   padding: 22px 0;
 }
+
+/* لوگو/برند */
 .brand{
   display: inline-flex;
   align-items: center;
@@ -74,6 +106,8 @@ body {
   text-decoration: none;
   color: inherit;
 }
+
+/* باکس QC */
 .brand__mark{
   width: 38px;
   height: 38px;
@@ -84,8 +118,11 @@ body {
   box-shadow: 0 10px 28px rgba(0,0,0,.35);
   font-weight: 800;
 }
+
+/* اسم برند */
 .brand__name{ font-weight: 700; letter-spacing: .2px; }
 
+/* لینک‌های منو */
 .nav__links{
   display: flex;
   gap: 18px;
@@ -97,12 +134,13 @@ body {
 }
 .nav__links a:hover{ color: rgba(255,255,255,.95); }
 
+/* اکشن‌های سمت راست (Home/Login/Logout و...) */
 .nav__actions{
   display: flex;
   gap: 10px;
 }
 
-/* Mobile burger placeholder */
+/* منوی موبایل (فعلاً ساده) */
 .nav__burger{
   display: none;
   background: transparent;
@@ -117,9 +155,12 @@ body {
   margin: 4px 0;
 }
 
+
 /* =========================
    Buttons
    ========================= */
+
+/* دکمه پایه */
 .btn{
   display: inline-flex;
   align-items: center;
@@ -137,23 +178,33 @@ body {
   font-weight: 600;
   font-size: 14px;
 }
+
+/* hover عمومی دکمه‌ها */
 .btn:hover{
   transform: translateY(-1px);
   background: rgba(255,255,255,.08);
   border-color: rgba(255,255,255,.22);
 }
+
+/* دکمه اصلی (گرادیانت) */
 .btn--primary{
   border-color: rgba(167,92,255,.35);
   background: linear-gradient(135deg, rgba(167,92,255,.9), rgba(90,190,255,.85));
   box-shadow: 0 18px 34px rgba(0,0,0,.35);
 }
+
+/* دکمه شفاف‌تر */
 .btn--ghost{
   background: rgba(255,255,255,.04);
 }
+
+/* سایز بزرگ */
 .btn--lg{
   padding: 12px 16px;
   border-radius: 16px;
 }
+
+/* دکمه تمام‌عرض */
 .btn--block{
   width: 100%;
 }
@@ -162,6 +213,8 @@ body {
 /* =========================
    Hero section
    ========================= */
+
+/* چیدمان کلی بخش hero (دو ستون) */
 .hero{
   display: grid;
   grid-template-columns: 1.05fr .95fr;
@@ -169,6 +222,8 @@ body {
   align-items: center;
   padding: 26px 0 14px;
 }
+
+/* برچسب کوچک (pill) */
 .pill{
   display: inline-block;
   padding: 7px 10px;
@@ -179,32 +234,43 @@ body {
   font-size: 12px;
   margin: 0 0 14px;
 }
+
+/* تیتر اصلی */
 .hero__title{
   font-size: clamp(34px, 5vw, 56px);
   line-height: 1.02;
   margin: 0 0 12px;
   letter-spacing: -0.6px;
 }
+
+/* زیرتیتر */
 .hero__subtitle{
   margin: 0 0 18px;
   color: rgba(255,255,255,.72);
   font-size: 16px;
   line-height: 1.6;
 }
+
+/* دکمه‌های CTA */
 .hero__cta{
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
+
+/* متن‌های ریز (مثلاً API status) */
 .hero__note{
   margin: 14px 0 0;
   font-size: 13px;
   color: rgba(255,255,255,.6);
 }
 
+
 /* =========================
-   Glass card (Today’s Quest)
+   Glass card
    ========================= */
+
+/* کارت شیشه‌ای اصلی (استفاده‌شده در home/panel) */
 .glassCard{
   border-radius: 22px;
   padding: 18px;
@@ -216,8 +282,9 @@ body {
   position: relative;
   overflow: hidden;
 }
+
+/* هایلایت بسیار کم‌رنگ روی کارت */
 .glassCard::before{
-  /* subtle highlight */
   content: "";
   position: absolute;
   inset: -60px -60px auto auto;
@@ -225,6 +292,8 @@ body {
   background: radial-gradient(circle, rgba(90,190,255,.35), transparent 60%);
   transform: rotate(18deg);
 }
+
+/* هدر کارت */
 .glassCard__head{
   display: flex;
   align-items: center;
@@ -232,11 +301,15 @@ body {
   gap: 12px;
   position: relative;
 }
+
+/* عنوان کارت */
 .glassCard__title{
   margin: 0;
   font-size: 18px;
   letter-spacing: .2px;
 }
+
+/* badge عمومی */
 .badge{
   font-size: 12px;
   font-weight: 700;
@@ -245,11 +318,14 @@ body {
   border: 1px solid rgba(255,255,255,.14);
   background: rgba(255,255,255,.05);
 }
+
+/* badge با رنگ متفاوت (مثلاً New/Soon) */
 .badge--medium{
   border-color: rgba(255, 208, 0, .25);
   background: rgba(255, 208, 0, .08);
 }
 
+/* grid اطلاعات متا داخل کارت */
 .glassCard__meta{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -257,6 +333,8 @@ body {
   margin: 14px 0 12px;
   position: relative;
 }
+
+/* آیتم‌های متا (label/value) */
 .metaItem{
   display: flex;
   gap: 10px;
@@ -270,12 +348,15 @@ body {
 .metaItem__label{ font-size: 11px; color: rgba(255,255,255,.6); }
 .metaItem__value{ font-size: 13px; font-weight: 700; }
 
+/* متن توضیح کارت */
 .glassCard__desc{
   margin: 0 0 14px;
   color: rgba(255,255,255,.72);
   line-height: 1.55;
   position: relative;
 }
+
+/* اکشن‌های کارت (دو دکمه کنار هم) */
 .glassCard__actions{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -283,9 +364,11 @@ body {
   position: relative;
 }
 
+
 /* =========================
    Social proof stats
    ========================= */
+
 .stats{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -309,9 +392,11 @@ body {
   color: rgba(255,255,255,.66);
 }
 
+
 /* =========================
    Generic sections
    ========================= */
+
 .section{
   padding: 34px 0 10px;
 }
@@ -338,7 +423,7 @@ body {
   gap: 12px;
 }
 
-/* Simple card */
+/* کارت ساده برای بخش‌های عمومی */
 .card{
   border-radius: 18px;
   border: 1px solid rgba(255,255,255,.12);
@@ -353,6 +438,7 @@ body {
 /* =========================
    Pricing
    ========================= */
+
 .pricing{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -372,7 +458,12 @@ body {
   font-weight: 900;
   letter-spacing: -0.4px;
 }
-.priceCard__price span{ font-size: 12px; color: rgba(255,255,255,.65); font-weight: 700; margin-left: 4px; }
+.priceCard__price span{
+  font-size: 12px;
+  color: rgba(255,255,255,.65);
+  font-weight: 700;
+  margin-left: 4px;
+}
 .priceCard--featured{
   border-color: rgba(167,92,255,.38);
   background: linear-gradient(180deg, rgba(167,92,255,.14), rgba(255,255,255,.04));
@@ -397,9 +488,11 @@ body {
   line-height: 1.7;
 }
 
+
 /* =========================
    Footer
    ========================= */
+
 .footer{
   margin-top: 36px;
   padding-top: 18px;
@@ -423,9 +516,11 @@ body {
 }
 .footer__right a:hover{ color: rgba(255,255,255,.95); }
 
+
 /* =========================
    Floating Streak widget
    ========================= */
+
 .streak{
   position: fixed;
   right: 18px;
@@ -460,10 +555,13 @@ body {
   color: rgba(255,255,255,.65);
 }
 
+
 /* =========================
    Responsive
    ========================= */
-@media (max-width: 980px){
+
+/* ریسپانسیو برای موبایل/تبلت: تبدیل layout دو ستونه به تک‌ستونه */
+@media (max-width: 980px){ /* الگوی رایج برای مدیا کوئری‌ها [web:153] */
   .hero{ grid-template-columns: 1fr; }
   .glassCard__meta{ grid-template-columns: 1fr; }
   .glassCard__actions{ grid-template-columns: 1fr; }
@@ -472,9 +570,15 @@ body {
   .pricing{ grid-template-columns: 1fr; }
   .nav__links{ display: none; }
   .nav__burger{ display: inline-block; }
-  .streak{ display: none; } /* hide floating widget on small screens */
+  .streak{ display: none; } /* مخفی کردن ویجت استریک روی صفحه کوچک */
 }
-/* ===== Quest dynamic helpers ===== */
+
+
+/* =========================
+   Helpers (Dynamic UI)
+   ========================= */
+
+/* پیام‌ها (برای جاوااسکریپت: setMsg) */
 #msg{
   margin: 10px 0 0;
   font-size: 13px;
@@ -483,27 +587,34 @@ body {
 #msg.is-error{ color: rgba(255, 120, 120, .95); }
 #msg.is-ok{ color: rgba(140, 255, 190, .95); }
 
+/* برجسته‌تر کردن وضعیت کوئست */
 #questStatus{
   font-weight: 800;
 }
+
+
 /* =========================
-   Panel helpers
+   Panel helpers (Collapsible + Goals)
    ========================= */
+
+/* محتوای فرم Goal در حالت بسته: ارتفاع کم + شفافیت 0 (برای انیمیشن) */
 .qcCollapse .qcCollapse__content{
   overflow: hidden;
   max-height: 0;
   opacity: 0;
   transform: translateY(-6px);
   transition: max-height .35s ease, opacity .25s ease, transform .25s ease;
+  /* نکته: transition روی max-height تکنیک رایج برای انیمیت کردن باز/بسته شدن است. [web:151] */
 }
 
+/* حالت باز: max-height بزرگ می‌دهیم تا محتوا کامل دیده شود */
 .qcCollapse.is-open .qcCollapse__content{
-  max-height: 1600px; /* big enough for the form */
+  max-height: 1600px; /* به اندازه کافی بزرگ برای فرم */
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Goals list cards */
+/* کارت‌های لیست Goals در پنل */
 .qcGoalCard{
   border: 1px solid rgba(255,255,255,.12);
   background: rgba(255,255,255,.04);
@@ -512,6 +623,7 @@ body {
   margin-top: 10px;
 }
 
+/* ردیف بالایی کارت (عنوان + badge) */
 .qcGoalCard__top{
   display:flex;
   align-items:center;
@@ -519,12 +631,14 @@ body {
   gap: 10px;
 }
 
+/* عنوان هدف */
 .qcGoalCard__title{
   margin: 0;
   font-size: 16px;
   font-weight: 900;
 }
 
+/* جزئیات کارت Goal */
 .qcGoalCard__meta{
   margin-top: 6px;
   color: rgba(255,255,255,.70);
@@ -532,6 +646,7 @@ body {
   line-height: 1.6;
 }
 
+/* دکمه‌های کارت (مثل Delete) */
 .qcGoalCard__actions{
   margin-top: 10px;
   display: flex;
@@ -539,6 +654,7 @@ body {
   flex-wrap: wrap;
 }
 
+/* متن‌های ریز داخل کارت (label های کوچک) */
 .qcMini{
   font-size: 12px;
   color: rgba(255,255,255,.65);

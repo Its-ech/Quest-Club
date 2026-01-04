@@ -1,48 +1,82 @@
+// ================================
+// Panel (Goals) - عناصر اصلی صفحه
+// ================================
+
+// گرفتن المنت‌های وضعیت API و پیام‌های UI
 const apiStatus = document.getElementById('apiStatus');
 const msg = document.getElementById('msg');
 
+// دکمه‌های لاگ‌اوت (در هدر و در بخش CTA)
 const btnLogout = document.getElementById('btnLogout');
 const btnLogout2 = document.getElementById('btnLogout2');
 
-// New UI elements
+// ================================
+// UI جدید پنل: دکمه‌ها و لیست Goals
+// ================================
+
+// دکمه باز/بسته کردن فرم ساخت Goal
 const btnToggleGoalForm = document.getElementById('btnToggleGoalForm');
+
+// کارت فرم ساخت Goal (collapsible)
 const goalFormCard = document.getElementById('goalFormCard');
+
+// لیست اهداف ذخیره‌شده و شمارنده
 const goalsList = document.getElementById('goalsList');
 const goalsCount = document.getElementById('goalsCount');
 
-// Create Goal elements (form)
+// ================================
+// عناصر فرم ساخت Goal
+// ================================
+
+// فیلدهای اصلی Goal
 const goalType = document.getElementById('goalType');
 const goalCategory = document.getElementById('goalCategory');
 const goalTime = document.getElementById('goalTime');
 const goalTitle = document.getElementById('goalTitle');
 const goalDesc = document.getElementById('goalDesc');
 
+// آپلود تصویر + پیش‌نمایش (فقط روی فرانت و داخل localStorage)
 const goalImage = document.getElementById('goalImage');
 const imagePreviewWrap = document.getElementById('imagePreviewWrap');
 const imagePreview = document.getElementById('imagePreview');
 
+// تنظیمات یادآور (Reminders)
 const enableReminders = document.getElementById('enableReminders');
 const reminderMode = document.getElementById('reminderMode');
 const reminderFixed = document.getElementById('reminderFixed');
 const reminderInterval = document.getElementById('reminderInterval');
 const reminderIntervalLabel = document.getElementById('reminderIntervalLabel');
 
+// نمایش پیشرفت (برای گروهی با توجه به تعداد task های done)
 const goalProgress = document.getElementById('goalProgress');
 const goalProgressText = document.getElementById('goalProgressText');
 
+// بخش تسک‌های گروهی
 const groupTasksWrap = document.getElementById('groupTasksWrap');
 const taskTitle = document.getElementById('taskTitle');
 const taskTime = document.getElementById('taskTime');
 const btnAddTask = document.getElementById('btnAddTask');
 const tasksList = document.getElementById('tasksList');
 
+// دکمه‌های فرم
 const btnSaveGoal = document.getElementById('btnSaveGoal');
 const btnShareGoal = document.getElementById('btnShareGoal');
 
+// ================================
+// تنظیمات ذخیره‌سازی لوکال
+// ================================
+
+// کلید ذخیره Goals در localStorage (موقت تا زمان اتصال به بک‌اند)
 const LS_GOALS = 'qc_goals_v1';
 
+// تایمر یادآور فعال (برای اینکه چند تایمر همزمان نسازیم)
 let reminderTimerId = null;
 
+// ================================
+// پیام‌های UI
+// ================================
+
+// نمایش پیام به کاربر (ok/error)
 function setMsg(text, type) {
   msg.textContent = text || '';
   msg.classList.remove('is-error', 'is-ok');
@@ -50,9 +84,17 @@ function setMsg(text, type) {
   if (type === 'ok') msg.classList.add('is-ok');
 }
 
+// ================================
+// درخواست به API (fetch wrapper)
+// ================================
+
+// wrapper برای fetch که:
+// - cookie را همراه درخواست می‌فرستد (credentials: 'include')
+// - پاسخ JSON را parse می‌کند
+// - اگر status غیر 2xx بود خطا می‌اندازد
 async function request(url, options = {}) {
   const res = await fetch(url, {
-    credentials: 'include',
+    credentials: 'include', // برای ارسال cookie های احراز هویت
     ...options
   });
 
@@ -68,6 +110,11 @@ async function request(url, options = {}) {
   return data;
 }
 
+// ================================
+// وضعیت API و احراز هویت
+// ================================
+
+// چک کردن health برای نمایش آنلاین/آفلاین بودن API
 async function checkHealth() {
   try {
     await request('/api/v1/health');
@@ -77,6 +124,7 @@ async function checkHealth() {
   }
 }
 
+// اطمینان از اینکه کاربر لاگین است، در غیر اینصورت redirect به login
 async function requireAuth() {
   try {
     await request('/api/v1/auth/me');
@@ -87,6 +135,7 @@ async function requireAuth() {
   }
 }
 
+// خروج از حساب کاربری و انتقال به صفحه login
 async function logout() {
   setMsg('');
   try {
@@ -98,9 +147,15 @@ async function logout() {
   }
 }
 
+// اتصال رویداد کلیک لاگ‌اوت به هر دو دکمه (اگر وجود داشته باشند)
 btnLogout?.addEventListener('click', logout);
 btnLogout2?.addEventListener('click', logout);
 
+// ================================
+// کار با localStorage (Goals)
+// ================================
+
+// خواندن لیست Goals از localStorage
 function readGoals() {
   try {
     const raw = localStorage.getItem(LS_GOALS);
@@ -112,10 +167,12 @@ function readGoals() {
   }
 }
 
+// ذخیره لیست Goals در localStorage
 function saveGoals(goals) {
   localStorage.setItem(LS_GOALS, JSON.stringify(goals));
 }
 
+// ساخت یک Goal خالی (draft) برای فرم
 function emptyDraftGoal() {
   return {
     id: `g_${Date.now()}_${Math.random().toString(16).slice(2)}`,
@@ -136,8 +193,14 @@ function emptyDraftGoal() {
   };
 }
 
+// draft فعلی فرم (قبل از ذخیره شدن در localStorage)
 let draftGoal = emptyDraftGoal();
 
+// ================================
+// ابزارهای کمکی (HTML escape و Progress)
+// ================================
+
+// جلوگیری از XSS در رندر کردن متن‌ها داخل innerHTML
 function escapeHtml(str) {
   return String(str || '')
     .replaceAll('&', '&amp;')
@@ -147,12 +210,16 @@ function escapeHtml(str) {
     .replaceAll("'", '&#039;');
 }
 
+// ست کردن درصد progress در UI
 function setProgressPercent(pct) {
   const safe = Math.max(0, Math.min(100, Math.round(pct)));
   goalProgress.value = safe;
   goalProgressText.textContent = `${safe}%`;
 }
 
+// محاسبه progress:
+// - single: فعلاً 0
+// - group: تعداد done / تعداد کل
 function computeProgress(goal) {
   if (goal.type === 'single') return 0;
 
@@ -162,6 +229,11 @@ function computeProgress(goal) {
   return (done / total) * 100;
 }
 
+// ================================
+// UI حالت Reminder (fixed/interval)
+// ================================
+
+// نمایش/مخفی کردن inputهای مربوط به reminder mode
 function syncReminderModeUI() {
   const mode = reminderMode.value;
   if (mode === 'interval') {
@@ -175,17 +247,22 @@ function syncReminderModeUI() {
   }
 }
 
+// توقف تایمر یادآور قبلی (برای جلوگیری از چند تایمر)
 function stopReminders() {
   if (reminderTimerId) clearInterval(reminderTimerId);
   reminderTimerId = null;
 }
 
+// شروع یادآور برای draft فعلی (صرفاً در همین صفحه)
 function startReminders(goal) {
   stopReminders();
 
+  // اگر reminders خاموش باشد، کاری نمی‌کنیم
   if (!goal.reminders?.enabled) return;
 
   const mode = goal.reminders?.mode || 'fixed';
+
+  // حالت interval: هر X دقیقه پیام بده
   if (mode === 'interval') {
     const minutes = Math.max(1, Number(goal.reminders?.intervalMinutes || 60));
     reminderTimerId = setInterval(() => {
@@ -196,6 +273,7 @@ function startReminders(goal) {
     return;
   }
 
+  // حالت fixed: در زمان‌های مشخص پیام بده (مثلاً 09:00)
   const times = (goal.reminders?.fixedTimes || '')
     .split(',')
     .map(s => s.trim())
@@ -215,16 +293,24 @@ function startReminders(goal) {
   setMsg(`Reminders enabled: ${times.length ? times.join(', ') : 'No times set'}.`, 'ok');
 }
 
+// ================================
+// رندر کردن Task های گروهی
+// ================================
+
+// نمایش لیست task ها داخل فرم (برای goal type = group)
 function renderTasks(goal) {
   tasksList.innerHTML = '';
 
+  // اگر گروهی نیست، چیزی نشان نمی‌دهیم
   if (goal.type !== 'group') return;
 
+  // اگر task نداریم پیام ساده نمایش بده
   if (goal.tasks.length === 0) {
     tasksList.innerHTML = `<p class="hero__note" style="margin: 6px 0 0;">No tasks yet. Add your first task.</p>`;
     return;
   }
 
+  // ساخت ردیف برای هر task
   goal.tasks.forEach((t) => {
     const row = document.createElement('div');
     row.className = 'metaItem';
@@ -248,6 +334,11 @@ function renderTasks(goal) {
   });
 }
 
+// ================================
+// رندر و خواندن draft فرم
+// ================================
+
+// پر کردن فرم از روی draftGoal
 function renderDraftGoal(goal) {
   goalType.value = goal.type;
   goalCategory.value = goal.category || '';
@@ -255,11 +346,13 @@ function renderDraftGoal(goal) {
   goalTitle.value = goal.title || '';
   goalDesc.value = goal.desc || '';
 
+  // reminders
   enableReminders.checked = !!goal.reminders?.enabled;
   reminderMode.value = goal.reminders?.mode || 'fixed';
   reminderFixed.value = goal.reminders?.fixedTimes || '09:00, 14:00, 20:00';
   reminderInterval.value = goal.reminders?.intervalMinutes ?? 60;
 
+  // تصویر
   if (goal.imageDataUrl) {
     imagePreview.src = goal.imageDataUrl;
     imagePreviewWrap.style.display = 'block';
@@ -268,6 +361,7 @@ function renderDraftGoal(goal) {
     imagePreviewWrap.style.display = 'none';
   }
 
+  // نمایش task های گروهی فقط اگر type=group باشد
   const isGroup = goal.type === 'group';
   groupTasksWrap.style.display = isGroup ? 'block' : 'none';
 
@@ -275,9 +369,11 @@ function renderDraftGoal(goal) {
   renderTasks(goal);
   setProgressPercent(computeProgress(goal));
 
+  // یادآور را بر اساس draft فعلی تنظیم می‌کنیم
   startReminders(goal);
 }
 
+// خواندن مقدارهای فرم و ساخت یک object جدید برای draft
 function readDraftFromUI() {
   const g = { ...draftGoal };
 
@@ -298,12 +394,17 @@ function readDraftFromUI() {
   return g;
 }
 
+// اعتبارسنجی ساده قبل از ذخیره
 function validateGoal(goal) {
   if (!goal.title) return 'Title is required.';
   if (!goal.dueAt) return 'Due time is required.';
   if (goal.type === 'group' && goal.tasks.length === 0) return 'Add at least 1 task for a group.';
   return null;
 }
+
+// ================================
+// رندر لیست Goals (سمت راست پنل)
+// ================================
 
 function renderGoalsList() {
   const goals = readGoals();
@@ -342,6 +443,10 @@ function renderGoalsList() {
   });
 }
 
+// ================================
+// باز/بسته کردن فرم (collapsible)
+// ================================
+
 function openGoalForm() {
   goalFormCard.classList.add('is-open');
   btnToggleGoalForm.textContent = 'Close Form';
@@ -357,10 +462,12 @@ function toggleGoalForm() {
   else openGoalForm();
 }
 
+// کلیک روی دکمه Add Goal / Close Form
 btnToggleGoalForm.addEventListener('click', () => {
   toggleGoalForm();
 });
 
+// حذف یک goal از لیست (از طریق data-del-goal)
 goalsList.addEventListener('click', (e) => {
   const goalId = e.target?.getAttribute?.('data-del-goal');
   if (!goalId) return;
@@ -371,22 +478,29 @@ goalsList.addEventListener('click', (e) => {
   setMsg('Goal deleted.', 'ok');
 });
 
-// Form events
+// ================================
+// رویدادهای فرم (Form events)
+// ================================
+
+// تغییر نوع goal (single/group)
 goalType.addEventListener('change', () => {
   draftGoal = readDraftFromUI();
   renderDraftGoal(draftGoal);
 });
 
+// تغییر حالت reminder (fixed/interval)
 reminderMode.addEventListener('change', () => {
   syncReminderModeUI();
   draftGoal = readDraftFromUI();
 });
 
+// روشن/خاموش کردن reminders
 enableReminders.addEventListener('change', () => {
   draftGoal = readDraftFromUI();
   renderDraftGoal(draftGoal);
 });
 
+// اضافه کردن task به goal گروهی
 btnAddTask.addEventListener('click', () => {
   setMsg('');
 
@@ -413,6 +527,7 @@ btnAddTask.addEventListener('click', () => {
   setMsg('Task added.', 'ok');
 });
 
+// حذف task از لیست task ها
 tasksList.addEventListener('click', (e) => {
   const delId = e.target?.getAttribute?.('data-del-id');
   if (!delId) return;
@@ -423,6 +538,7 @@ tasksList.addEventListener('click', (e) => {
   setMsg('Task removed.', 'ok');
 });
 
+// تغییر وضعیت done یک task
 tasksList.addEventListener('change', (e) => {
   const taskId = e.target?.getAttribute?.('data-task-id');
   if (!taskId) return;
@@ -434,6 +550,7 @@ tasksList.addEventListener('change', (e) => {
   renderDraftGoal(draftGoal);
 });
 
+// انتخاب تصویر و ساخت dataURL برای preview
 goalImage.addEventListener('change', () => {
   const file = goalImage.files?.[0];
   if (!file) return;
@@ -448,6 +565,7 @@ goalImage.addEventListener('change', () => {
   reader.readAsDataURL(file);
 });
 
+// ذخیره goal در localStorage و آپدیت لیست
 btnSaveGoal.addEventListener('click', () => {
   setMsg('');
 
@@ -462,12 +580,13 @@ btnSaveGoal.addEventListener('click', () => {
   renderGoalsList();
   setMsg('Goal saved.', 'ok');
 
-  // reset draft and close
+  // ریست کردن draft و بستن فرم
   draftGoal = emptyDraftGoal();
   renderDraftGoal(draftGoal);
   closeGoalForm();
 });
 
+// کپی کردن JSON هدف برای share (فعلاً ساده: clipboard)
 btnShareGoal.addEventListener('click', async () => {
   setMsg('');
   try {
@@ -480,16 +599,22 @@ btnShareGoal.addEventListener('click', async () => {
   }
 });
 
-// Init
+// ================================
+// init: چک API، چک لاگین، رندر اولیه
+// ================================
+
 (async function init() {
+  // نمایش وضعیت API
   await checkHealth();
 
+  // اگر لاگین نبود -> redirect
   const ok = await requireAuth();
   if (!ok) return;
 
+  // رندر goals از localStorage
   renderGoalsList();
 
-  // start collapsed
+  // فرم ابتدا بسته باشد + draft اولیه رندر شود
   closeGoalForm();
   renderDraftGoal(draftGoal);
 })();
