@@ -1,12 +1,16 @@
 const router = require('express').Router();
-const state = require('../../store/memoryStore'); // استیت موقت استریک
+
+const { getUserState } = require('../../store/memoryStore'); // استیت per-user
 const requireAuth = require('../../middlewares/requireAuth'); // میدلوری چک لاگین
 
-// ✅ تمام روت‌های این فایل فقط برای کاربر لاگین‌شده
-router.use(requireAuth); // اعمال میدلوری روی کل روت‌های استریک [web:14]
+// تمام روت‌های این فایل فقط برای کاربر لاگین‌شده
+router.use(requireAuth); // میدلوری در سطح router [web:14]
 
 // دریافت وضعیت استریک و درصد پیشرفت تا جایزه بعدی
 router.get('/streak', (req, res) => {
+  // گرفتن استیت مخصوص همین کاربر
+  const state = getUserState(req.user.id);
+
   // محاسبه درصد پیشرفت تا جایزه بعدی
   const progressPercent = Math.min(
     100,

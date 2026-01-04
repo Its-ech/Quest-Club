@@ -1,13 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const state = require('../../store/memoryStore'); // استیت موقت (فعلاً مشترک بین همه کاربران)
+
+const { getUserState } = require('../../store/memoryStore'); // استیت per-user
 const requireAuth = require('../../middlewares/requireAuth'); // میدلوری چک لاگین
 
-// ✅ تمام روت‌های این فایل فقط برای کاربر لاگین‌شده
-router.use(requireAuth); // اعمال میدلوری روی کل روت‌های کوئست [web:14]
+// تمام روت‌های این فایل فقط برای کاربر لاگین‌شده
+router.use(requireAuth); // میدلوری در سطح router [web:14]
 
-// دریافت وضعیت کوئست امروز + وضعیت کاربر (accepted/completed)
+// دریافت وضعیت کوئست امروز + وضعیت کاربر
 router.get('/quests/today', (req, res) => {
+  // گرفتن استیت مخصوص همین کاربر
+  const state = getUserState(req.user.id);
+
   return res.status(200).json({
     ok: true,
 
@@ -34,6 +38,8 @@ router.get('/quests/today', (req, res) => {
 
 // شروع کوئست امروز (accept) و ست کردن تایمر (deadline)
 router.post('/quests/today/accept', (req, res) => {
+  const state = getUserState(req.user.id);
+
   // جلوگیری از accept دوباره
   if (state.accepted) {
     return res.status(409).json({ error: 'Quest already accepted' });
@@ -55,6 +61,8 @@ router.post('/quests/today/accept', (req, res) => {
 
 // تکمیل کوئست امروز (قانون A: بعد از endsAt منقضی می‌شود)
 router.post('/quests/today/complete', (req, res) => {
+  const state = getUserState(req.user.id);
+
   // باید اول accept شده باشد
   if (!state.accepted) {
     return res.status(409).json({ error: 'Quest must be accepted first' });
@@ -74,7 +82,7 @@ router.post('/quests/today/complete', (req, res) => {
   state.completed = true;
   state.completedAt = new Date().toISOString();
 
-  // افزایش استریک (فعلاً مشترک — در قدم بعدی per-user می‌کنیم)
+  // افزایش استریک فقط برای همین کاربر
   state.streakDays += 1;
 
   return res.status(200).json({
